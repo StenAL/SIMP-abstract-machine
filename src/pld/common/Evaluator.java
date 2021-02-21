@@ -36,7 +36,6 @@ public class Evaluator {
         ControlStackable top = controlStack.remove(controlStack.size() - 1);
         if (top instanceof IntegerExpression || top instanceof IntegerOperator) {
             processInteger(top);
-
         } else if (top instanceof BooleanExpression || top instanceof ComparisonOperator || top instanceof LogicalOperator) {
             processBoolean(top);
         } else if (top instanceof Command || top instanceof CommandToken) {

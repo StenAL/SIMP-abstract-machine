@@ -1,8 +1,13 @@
 package pld;
 
-import pld.bool.*;
+import pld.bool.BooleanExpression;
+import pld.bool.ComparisonOperator;
+import pld.bool.IntegerComparison;
+import pld.bool.LogicalNegation;
 import pld.command.*;
-import pld.common.*;
+import pld.common.Evaluator;
+import pld.common.Program;
+import pld.common.VariableName;
 import pld.integer.*;
 
 public class Main {
@@ -30,14 +35,14 @@ public class Main {
             return new Skip();
         }
 
-        Command initializeResult = new VariableAssignment(new VariableName("result"), new IntegerValue(1));
-        Command initializeX = new VariableAssignment(new VariableName("x"), new IntegerValue(x));
-        Command initializeN = new VariableAssignment(new VariableName("n"), new IntegerValue(n));
+        Command initializeResult = new VariableAssignment(new VariableName("result"), new IntegerValue(1)); // result := 1
+        Command initializeX = new VariableAssignment(new VariableName("x"), new IntegerValue(x)); // x := (parameter x)
+        Command initializeN = new VariableAssignment(new VariableName("n"), new IntegerValue(n)); // n := (parameter n)
         Command initialization = new Chain(new Chain(initializeResult, initializeX), initializeN);
 
-        BooleanExpression condition = new IntegerComparison(new VariableRead(new VariableName("n")), new IntegerValue(0), ComparisonOperator.GREATER_THAN);
-        Command multiplyResult = new VariableAssignment(new VariableName("result"), new IntegerOperation(new VariableRead(new VariableName("result")), new VariableRead(new VariableName("x")), IntegerOperator.MULT));
-        Command decrementN = new VariableAssignment(new VariableName("n"), new IntegerOperation(new VariableRead(new VariableName("n")), new IntegerValue(1), IntegerOperator.MINUS));
+        BooleanExpression condition = new IntegerComparison(new VariableRead(new VariableName("n")), new IntegerValue(0), ComparisonOperator.GREATER_THAN); // !n > 0
+        Command multiplyResult = new VariableAssignment(new VariableName("result"), new IntegerOperation(new VariableRead(new VariableName("result")), new VariableRead(new VariableName("x")), IntegerOperator.MULT)); // result = !result * !x
+        Command decrementN = new VariableAssignment(new VariableName("n"), new IntegerOperation(new VariableRead(new VariableName("n")), new IntegerValue(1), IntegerOperator.MINUS)); // n = !n - 1
         Command whileLoop = new While(condition, new Chain(multiplyResult, decrementN));
 
         return new Chain(initialization, whileLoop);
